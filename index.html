@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API</title>
+</head>
+<body>
+
+    <il id="list">
+
+    </il>
+    <button id="getData">Get Data</button>
+    <button id="createData">Create Data</button>
+    <button id="updateData">Update Data</button>
+    <button id="deleteData">Delete Data</button>
+
+    <script>
+        function showData(data) {
+            let myList = document.querySelector('#list');
+            data.forEach(val => {
+                let myEl = document.createElement('li');
+                myEl.innerText = `User : ${val.first_name} ${val.last_name} | Email : ${val.email}`;
+                myList.appendChild(myEl);
+            });
+        }
+
+        // fetch('http://localhost:3000/users')
+        //     .then(response => (response.json()))
+        //     .then(data => showData(data));
+
+        async function getData(){
+            let response = await fetch('http://localhost:3000/users');
+            let data = await response.json();
+            showData(data);
+        }
+        let getDataBtn = document.querySelector('#getData');
+        getDataBtn.addEventListener('click', getData);
+
+        function createData() {
+            fetch('http://localhost:3000/users', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "id" : 6,
+                    "first_name" : 'John',
+                    "last_name" : 'Doe',
+                    "email" : "jdoe@gmail.com"
+                })
+            })
+            .then(response => console.log(response))
+            .catch(err => console.log(err));
+        }
+
+        let createDataBtn = document.querySelector('#createData');
+        createDataBtn.addEventListener('click', createData);
+
+        function updateData() {
+            fetch('http://localhost:3000/users/6', {
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "id" : 6,
+                    "first_name" : 'Smith',
+                    "last_name" : 'Doe',
+                    "email" : "smithdoe@gmail.com"
+                })
+            })
+            .then(response => console.log(response))
+            .catch(err => console.log(err));
+        }
+
+        let updateDataBtn = document.querySelector('#updateData');
+        updateDataBtn.addEventListener('click', updateData);
+
+        function deleteData() {
+            fetch('http://localhost:3000/users/6', {
+                method: 'delete',
+            })
+            .then(response => console.log(response))
+            .catch(err => console.log(err));
+        }
+
+        let deleteDataBtn = document.querySelector('#deleteData');
+        deleteDataBtn.addEventListener('click', deleteData);
+    </script>
+</body>
+</html>
